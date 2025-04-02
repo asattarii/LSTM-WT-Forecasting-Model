@@ -1,0 +1,11 @@
+#!/bin/bash
+#SBATCH -J pr                    # Job name
+#SBATCH -o OUTPUT_A.out           # Standard output file
+#SBATCH -e ERROR_A.error          # Standard error file
+#SBATCH -p mh1
+#SBATCH -q mh1 
+#SBATCH --mem-per-cpu=15G         # Memory per CPU
+
+
+# Run the Python script and ensure output is flushed
+python3 LSTM-WT.py
