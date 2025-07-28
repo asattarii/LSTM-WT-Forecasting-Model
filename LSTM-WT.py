@@ -32,15 +32,15 @@ val_discharge = discharge[val_indices]
 test_discharge = discharge[test_indices]
 
 def wavelet_features(discharge_segment):
-    n_levels = 3
-    coeffs = pywt.wavedec(discharge_segment, 'db5', level=n_levels)
+    n_levels = "User_defined"
+    coeffs = pywt.wavedec(discharge_segment, 'wavelet_name', level=n_levels)
     reconstructed_signals = []
     coeff_for_approximation = [coeffs[0]] + [np.zeros_like(c) for c in coeffs[1:]]
-    approximation = pywt.waverec(coeff_for_approximation, 'db5')
+    approximation = pywt.waverec(coeff_for_approximation, 'wavelet_name')
     reconstructed_signals.append(approximation[:len(discharge_segment)])
     for i in range(1, n_levels + 1):
         coeff_for_detail = [np.zeros_like(c) if j != i else coeffs[i] for j, c in enumerate(coeffs)]
-        detail = pywt.waverec(coeff_for_detail, 'db5')
+        detail = pywt.waverec(coeff_for_detail, 'wavelet_name')
         reconstructed_signals.append(detail[:len(discharge_segment)])
     features = np.vstack(reconstructed_signals).T
     feature_names = ['approximation'] + [f'detail_level_{i}' for i in range(1, n_levels + 1)]
@@ -71,7 +71,7 @@ scaler_target.fit(y_train)
 
 df_scaled = scaler.transform(df.drop(columns=['observation']).values)
 target_scaled = scaler_target.transform(df['observation'].values.reshape(-1, 1))
-
+df_scaled = np.hstack([df_scaled, target_scaled])
 
 
 def split_sequences_multistep(sequences, n_steps_in, n_steps_out, target_index=-1):
