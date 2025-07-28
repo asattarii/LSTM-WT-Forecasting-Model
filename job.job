@@ -7,5 +7,5 @@
 #SBATCH --mem-per-cpu=15G         # Memory per CPU
 
 
-# Run the Python script and ensure output is flushed
+# Run the Python script
 python3 LSTM-WT.py
