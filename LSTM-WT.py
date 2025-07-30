@@ -33,14 +33,14 @@ test_discharge = discharge[test_indices]
 
 def wavelet_features(discharge_segment):
     n_levels = "User_defined"
-    coeffs = pywt.wavedec(discharge_segment, 'wavelet_name', level=n_levels)
+    coeffs = pywt.wavedec(discharge_segment, 'wavelet_name', level=n_levels, mode = 'mode')
     reconstructed_signals = []
     coeff_for_approximation = [coeffs[0]] + [np.zeros_like(c) for c in coeffs[1:]]
-    approximation = pywt.waverec(coeff_for_approximation, 'wavelet_name')
+    approximation = pywt.waverec(coeff_for_approximation, 'wavelet_name', mode = 'mode')
     reconstructed_signals.append(approximation[:len(discharge_segment)])
     for i in range(1, n_levels + 1):
         coeff_for_detail = [np.zeros_like(c) if j != i else coeffs[i] for j, c in enumerate(coeffs)]
-        detail = pywt.waverec(coeff_for_detail, 'wavelet_name')
+        detail = pywt.waverec(coeff_for_detail, 'wavelet_name', mode = 'mode')
         reconstructed_signals.append(detail[:len(discharge_segment)])
     features = np.vstack(reconstructed_signals).T
     feature_names = ['approximation'] + [f'detail_level_{i}' for i in range(1, n_levels + 1)]
